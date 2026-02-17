@@ -1,9 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
-
-// Simplified QR generation for the sake of no external heavy libs in this context,
-// we will use a reliable CDN library if we could, but let's stick to a basic approach.
-// Using a smaller SDP via compression if possible would be better, but we'll show raw base64.
+import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
 interface QRGeneratorProps {
@@ -14,32 +10,31 @@ interface QRGeneratorProps {
 
 const QRGenerator: React.FC<QRGeneratorProps> = ({ data, title, subtitle }) => {
   return (
-    <div className="flex flex-col items-center justify-center space-y-6 p-8 bg-white/5 rounded-mesh border border-white/10 w-full max-w-sm">
-      <div className="text-center">
-        <h3 className="text-xl font-bold">{title}</h3>
-        {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
+    <div className="flex flex-col items-center justify-center space-y-6 p-8 bg-white/5 rounded-[2.5rem] border border-white/10 w-full max-w-sm animate-in zoom-in duration-300 shadow-2xl">
+      <div className="text-center space-y-1">
+        <h3 className="text-xl font-black italic text-primary uppercase tracking-tighter">{title}</h3>
+        {subtitle && <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{subtitle}</p>}
       </div>
       
-      <div className="bg-white p-4 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="bg-white p-4 rounded-3xl shadow-inner border-[6px] border-white">
         <QRCodeCanvas 
           value={data} 
           size={220}
-          level="L"
-          includeMargin={false}
-          imageSettings={{
-            src: "https://picsum.photos/40/40",
-            x: undefined,
-            y: undefined,
-            height: 24,
-            width: 24,
-            excavate: true,
-          }}
+          level="L" // Nivel de error bajo = menos puntos = más simple
+          marginSize={0}
+          renderAs="canvas"
         />
       </div>
       
-      <div className="text-xs text-gray-500 break-all line-clamp-2 px-4 opacity-50">
-        Signal Data: {data.substring(0, 50)}...
-      </div>
+      <button 
+        onClick={() => {
+          navigator.clipboard.writeText(data);
+          alert('Código copiado');
+        }}
+        className="text-[10px] font-mono text-gray-600 bg-black/20 py-2 px-4 rounded-full max-w-[200px] truncate hover:text-primary transition-colors"
+      >
+        {data}
+      </button>
     </div>
   );
 };
