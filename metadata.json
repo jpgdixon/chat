@@ -1,0 +1,8 @@
+
+{
+  "name": "ChatLan",
+  "description": "A high-performance P2P chat application that works entirely offline using WebRTC and QR code signaling.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
